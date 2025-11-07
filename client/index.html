@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collaborative Drawing Canvas</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <h1>Collaborative Drawing Canvas</h1>
+            <div class="user-info">
+                <span id="userCount">0 users online</span>
+                <input 
+                    type="text" 
+                    id="userName" 
+                    placeholder="Enter your name" 
+                    maxlength="20"
+                    title="Enter your display name"
+                    aria-label="Your display name"
+                >
+                <button id="changeColor" title="Change your user color" aria-label="Change your user color">Change Color</button>
+            </div>
+        </header>
+
+        <div class="main-content">
+            <aside class="toolbar">
+                <div class="tool-group">
+                    <h3>Tools</h3>
+                    <button class="tool-btn active" data-tool="brush" title="Brush tool" aria-label="Brush tool">✏️ Brush</button>
+                    <button class="tool-btn" data-tool="eraser" title="Eraser tool" aria-label="Eraser tool">🧽 Eraser</button>
+                    <button class="tool-btn" data-tool="clear" title="Clear canvas" aria-label="Clear entire canvas">🗑️ Clear</button>
+                </div>
+
+                <div class="tool-group">
+                    <h3>Colors</h3>
+                    <div class="color-palette">
+                        <div class="color-option active" data-color="#000000" style="background-color: #000000;" title="Black color" aria-label="Black color"></div>
+                        <div class="color-option" data-color="#ff0000" style="background-color: #ff0000;" title="Red color" aria-label="Red color"></div>
+                        <div class="color-option" data-color="#00ff00" style="background-color: #00ff00;" title="Green color" aria-label="Green color"></div>
+                        <div class="color-option" data-color="#0000ff" style="background-color: #0000ff;" title="Blue color" aria-label="Blue color"></div>
+                        <div class="color-option" data-color="#ffff00" style="background-color: #ffff00;" title="Yellow color" aria-label="Yellow color"></div>
+                        <div class="color-option" data-color="#ff00ff" style="background-color: #ff00ff;" title="Magenta color" aria-label="Magenta color"></div>
+                    </div>
+                </div>
+
+                <div class="tool-group">
+                    <h3>Brush Size</h3>
+                    <label for="brushSize" class="sr-only">Brush Size</label>
+                    <input 
+                        type="range" 
+                        id="brushSize" 
+                        min="1" 
+                        max="50" 
+                        value="5"
+                        title="Adjust brush size from 1 to 50 pixels"
+                        aria-label="Brush size slider"
+                    >
+                    <span id="brushSizeValue">5px</span>
+                </div>
+
+                <div class="tool-group">
+                    <h3>Actions</h3>
+                    <button id="undoBtn" title="Undo last drawing" aria-label="Undo last action">↶ Undo</button>
+                    <button id="redoBtn" title="Redo last undone drawing" aria-label="Redo last undone action">↷ Redo</button>
+                </div>
+
+                <div class="tool-group">
+                    <h3>Online Users</h3>
+                    <div id="usersList"></div>
+                </div>
+            </aside>
+
+            <main class="canvas-container">
+                <canvas id="drawingCanvas"></canvas>
+                <canvas id="cursorLayer"></canvas>
+                <div class="canvas-overlay" id="cursorOverlay"></div>
+            </main>
+        </div>
+    </div>
+
+    <script src="websocket.js"></script>
+    <script src="canvas.js"></script>
+    <script src="undo-redo.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>
