@@ -30,7 +30,7 @@ class DrawingState {
             op.userId !== operation.userId
         );
 
-        console.log(`✅ Operation added for ${operation.userId}. Total: ${roomState.operations.length}`);
+        console.log(` Operation added for ${operation.userId}. Total: ${roomState.operations.length}`);
         return operation.operationId;
     }
 
@@ -53,7 +53,7 @@ class DrawingState {
                     const undoneOp = roomState.operations.splice(i, 1)[0];
                     roomState.undoneOperations.push(undoneOp);
                     
-                    console.log(`✅ UNDO: Removed operation by ${userId}`);
+                    console.log(` UNDO: Removed operation by ${userId}`);
                     return {
                         type: 'operation-undo',
                         operationId: undoneOp.operationId,
@@ -63,7 +63,7 @@ class DrawingState {
                     };
                 }
             }
-            console.log(`❌ No operations to undo for ${userId}`);
+            console.log(` No operations to undo for ${userId}`);
             return null;
             
         } else if (action === 'redo') {
@@ -73,7 +73,7 @@ class DrawingState {
                     const redoneOp = roomState.undoneOperations.splice(i, 1)[0];
                     roomState.operations.push(redoneOp);
                     
-                    console.log(`✅ REDO: Added back operation by ${userId}`);
+                    console.log(` REDO: Added back operation by ${userId}`);
                     return {
                         type: 'operation-redo',
                         operation: redoneOp,
@@ -83,7 +83,7 @@ class DrawingState {
                     };
                 }
             }
-            console.log(`❌ No operations to redo for ${userId}`);
+            console.log(` No operations to redo for ${userId}`);
             return null;
         }
         
@@ -95,7 +95,7 @@ class DrawingState {
             const roomState = this.roomStates.get(roomId);
             roomState.operations = [];
             roomState.undoneOperations = [];
-            console.log(`🗑️ Canvas cleared`);
+            console.log(` Canvas cleared`);
         }
     }
 

@@ -2,20 +2,20 @@ class UndoRedoManager {
     constructor() {
         this.operations = [];
         this.undoneOperations = [];
-        console.log('🔄 UndoRedoManager initialized');
+        console.log(' UndoRedoManager initialized');
     }
 
     initializeOperations(operations) {
         this.operations = operations || [];
         this.undoneOperations = [];
-        console.log(`📊 Loaded ${this.operations.length} operations`);
+        console.log(` Loaded ${this.operations.length} operations`);
     }
 
     addOperation(operation) {
         this.operations.push(operation);
         // Clear redo stack when new operation is added
         this.undoneOperations = [];
-        console.log(`➕ Added ${operation.type}. Total: ${this.operations.length}`);
+        console.log(` Added ${operation.type}. Total: ${this.operations.length}`);
     }
 
     addRemoteOperation(operation) {
@@ -23,7 +23,7 @@ class UndoRedoManager {
         const exists = this.operations.some(op => op.operationId === operation.operationId);
         if (!exists) {
             this.operations.push(operation);
-            console.log(`➕ Added remote ${operation.type}. Total: ${this.operations.length}`);
+            console.log(` Added remote ${operation.type}. Total: ${this.operations.length}`);
         }
     }
 
@@ -31,10 +31,10 @@ class UndoRedoManager {
         if (this.operations.length > 0) {
             const lastOp = this.operations.pop();
             this.undoneOperations.push(lastOp);
-            console.log(`↶ Undo performed. Remaining: ${this.operations.length}`);
+            console.log(`Undo performed. Remaining: ${this.operations.length}`);
             return lastOp;
         } else {
-            console.log('❌ No operations to undo');
+            console.log(' No operations to undo');
             return null;
         }
     }
@@ -46,7 +46,7 @@ class UndoRedoManager {
             console.log(`↷ Redo performed. Total: ${this.operations.length}`);
             return redoneOp;
         } else {
-            console.log('❌ No operations to redo');
+            console.log(' No operations to redo');
             return null;
         }
     }
@@ -56,10 +56,10 @@ class UndoRedoManager {
         if (index !== -1) {
             const undoneOp = this.operations.splice(index, 1)[0];
             this.undoneOperations.push(undoneOp);
-            console.log(`🔄 Remote undo handled. Remaining: ${this.operations.length}`);
+            console.log(` Remote undo handled. Remaining: ${this.operations.length}`);
             return true;
         }
-        console.log('❌ Remote undo failed - operation not found');
+        console.log(' Remote undo failed - operation not found');
         return false;
     }
 
@@ -69,14 +69,14 @@ class UndoRedoManager {
         if (redoIndex !== -1) {
             this.undoneOperations.splice(redoIndex, 1);
         }
-        console.log(`🔄 Remote redo handled. Total: ${this.operations.length}`);
+        console.log(` Remote redo handled. Total: ${this.operations.length}`);
         return true;
     }
 
     clearOperations() {
         this.operations = [];
         this.undoneOperations = [];
-        console.log('🗑️ All operations cleared');
+        console.log(' All operations cleared');
     }
 
     getOperations() {

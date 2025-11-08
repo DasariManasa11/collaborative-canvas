@@ -17,12 +17,12 @@ class WebSocketClient {
             const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
             const wsUrl = `${protocol}//${window.location.host}`;
             
-            console.log('🔗 Connecting to:', wsUrl);
+            console.log(' Connecting to:', wsUrl);
             this.ws = new WebSocket(wsUrl);
             window.websocket = this.ws;
             
             this.ws.onopen = () => {
-                console.log('✅ Connected to server');
+                console.log(' Connected to server');
                 this.reconnectAttempts = 0;
                 this.joinRoom();
             };
@@ -32,26 +32,26 @@ class WebSocketClient {
                     const data = JSON.parse(event.data);
                     this.handleMessage(data);
                 } catch (error) {
-                    console.error('❌ Error parsing message:', error);
+                    console.error(' Error parsing message:', error);
                 }
             };
 
             this.ws.onclose = () => {
-                console.log('🔌 Disconnected from server');
+                console.log(' Disconnected from server');
                 this.handleReconnection();
             };
 
             this.ws.onerror = (error) => {
-                console.error('❌ WebSocket error:', error);
+                console.error(' WebSocket error:', error);
             };
 
         } catch (error) {
-            console.error('❌ Failed to connect:', error);
+            console.error(' Failed to connect:', error);
         }
     }
 
     handleMessage(data) {
-        console.log('📨 Received:', data.type);
+        console.log(' Received:', data.type);
         
         switch (data.type) {
             case 'canvas-state':

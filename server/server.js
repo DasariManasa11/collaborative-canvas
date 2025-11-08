@@ -31,7 +31,7 @@ app.get('/health', (req, res) => {
 });
 
 wss.on('connection', (ws, req) => {
-    console.log('🔗 New client connected');
+    console.log(' New client connected');
     
     let currentRoom = null;
     let currentUser = null;
@@ -39,10 +39,10 @@ wss.on('connection', (ws, req) => {
     ws.on('message', (message) => {
         try {
             const data = JSON.parse(message);
-            console.log('📨 Received:', data.type, 'from user:', currentUser ? currentUser.name : 'unknown');
+            console.log(' Received:', data.type, 'from user:', currentUser ? currentUser.name : 'unknown');
             handleMessage(ws, data);
         } catch (error) {
-            console.error('❌ Error parsing message:', error);
+            console.error(' Error parsing message:', error);
             ws.send(JSON.stringify({
                 type: 'error',
                 message: 'Invalid message format'
@@ -80,7 +80,7 @@ wss.on('connection', (ws, req) => {
                 break;
 
             default:
-                console.log('❓ Unknown message type:', data.type);
+                console.log(' Unknown message type:', data.type);
                 ws.send(JSON.stringify({
                     type: 'error',
                     message: `Unknown message type: ${data.type}`
@@ -96,7 +96,7 @@ wss.on('connection', (ws, req) => {
             color: data.color
         };
         
-        console.log(`🚪 User ${currentUser.name} (${currentUser.id}) joining room ${currentRoom}`);
+        console.log(` User ${currentUser.name} (${currentUser.id}) joining room ${currentRoom}`);
         
         roomManager.joinRoom(currentRoom, ws, currentUser);
         drawingState.initializeRoom(currentRoom);
@@ -114,12 +114,12 @@ wss.on('connection', (ws, req) => {
             user: currentUser
         }, ws);
 
-        console.log(`✅ User ${currentUser.name} joined room ${currentRoom}`);
+        console.log(` User ${currentUser.name} joined room ${currentRoom}`);
     }
 
     function handleDrawingOperation(ws, data) {
         if (!currentUser || !currentRoom) {
-            console.log('❌ Drawing operation rejected - user not in room');
+            console.log(' Drawing operation rejected - user not in room');
             return;
         }
 
@@ -137,7 +137,7 @@ wss.on('connection', (ws, req) => {
         // Broadcast to all other users in the room
         broadcastToRoom(currentRoom, operation, ws);
         
-        console.log(`✏️ ${data.type} from ${currentUser.name} in ${currentRoom}`);
+        console.log(` ${data.type} from ${currentUser.name} in ${currentRoom}`);
     }
 
     function handleCursorMove(ws, data) {
@@ -156,7 +156,7 @@ wss.on('connection', (ws, req) => {
 
     function handleUndoRedo(ws, data) {
         if (!currentUser || !currentRoom) {
-            console.log('❌ Undo/redo rejected - user not in room');
+            console.log(' Undo/redo rejected - user not in room');
             ws.send(JSON.stringify({
                 type: 'operation-failed',
                 action: data.type,
@@ -165,16 +165,16 @@ wss.on('connection', (ws, req) => {
             return;
         }
 
-        console.log(`🔄 ${data.type.toUpperCase()} request from ${currentUser.name}`);
+        console.log(` ${data.type.toUpperCase()} request from ${currentUser.name}`);
         
         const undoRedoResult = drawingState.performUndoRedo(currentRoom, data.type, currentUser.id);
         
         if (undoRedoResult) {
-            console.log(`✅ ${data.type} successful`);
+            console.log(` ${data.type} successful`);
             // Broadcast to ALL users including the one who requested it
             broadcastToRoom(currentRoom, undoRedoResult);
         } else {
-            console.log(`❌ ${data.type} failed - no operations`);
+            console.log(` ${data.type} failed - no operations`);
             ws.send(JSON.stringify({
                 type: 'operation-failed',
                 action: data.type,
@@ -188,7 +188,7 @@ wss.on('connection', (ws, req) => {
             return;
         }
 
-        console.log(`🗑️ Clear canvas request from ${currentUser.name}`);
+        console.log(` Clear canvas request from ${currentUser.name}`);
         drawingState.clearCanvas(currentRoom);
         
         broadcastToRoom(currentRoom, {
@@ -197,13 +197,13 @@ wss.on('connection', (ws, req) => {
             userName: currentUser.name
         });
         
-        console.log(`✅ Canvas cleared by ${currentUser.name}`);
+        console.log(` Canvas cleared by ${currentUser.name}`);
     }
 
     function handleDebugState(ws, data) {
         if (!currentRoom) return;
         
-        console.log('🐛 Debug state request from:', currentUser ? currentUser.name : 'unknown');
+        console.log(' Debug state request from:', currentUser ? currentUser.name : 'unknown');
         drawingState.debugState(currentRoom);
         
         // Send debug info back to client
@@ -226,11 +226,11 @@ wss.on('connection', (ws, req) => {
             }
         });
         
-        console.log(`📤 Broadcast ${message.type} to ${sentCount} users in ${roomId}`);
+        console.log(` Broadcast ${message.type} to ${sentCount} users in ${roomId}`);
     }
 
     ws.on('close', (code, reason) => {
-        console.log(`🔌 Client disconnected. Code: ${code}, Reason: ${reason}`);
+        console.log(` Client disconnected. Code: ${code}, Reason: ${reason}`);
         
         if (currentRoom && currentUser) {
             roomManager.leaveRoom(currentRoom, ws);
@@ -240,12 +240,12 @@ wss.on('connection', (ws, req) => {
                 userName: currentUser.name
             });
             
-            console.log(`👋 User ${currentUser.name} left room ${currentRoom}`);
+            console.log(` User ${currentUser.name} left room ${currentRoom}`);
         }
     });
 
     ws.on('error', (error) => {
-        console.error('❌ WebSocket error:', error);
+        console.error(' WebSocket error:', error);
     });
 
     // Send welcome message
@@ -262,33 +262,31 @@ function generateId() {
 
 // Handle graceful shutdown
 process.on('SIGINT', () => {
-    console.log('🛑 Shutting down server gracefully...');
+    console.log(' Shutting down server gracefully...');
     wss.close(() => {
-        console.log('✅ WebSocket server closed');
+        console.log(' WebSocket server closed');
         server.close(() => {
-            console.log('✅ HTTP server closed');
+            console.log(' HTTP server closed');
             process.exit(0);
         });
     });
 });
 
 process.on('SIGTERM', () => {
-    console.log('🛑 Received SIGTERM, shutting down...');
+    console.log(' Received SIGTERM, shutting down...');
     wss.close();
     server.close();
 });
 
 // Error handling for server
 server.on('error', (error) => {
-    console.error('❌ Server error:', error);
+    console.error(' Server error:', error);
 });
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
-    console.log('🚀 Server running on http://localhost:' + PORT);
-    console.log('📊 Health check available at http://localhost:' + PORT + '/health');
-    console.log('🎨 Collaborative Canvas ready for connections!');
+    console.log(' Server running on http://localhost:' + PORT);
+    console.log(' Health check available at http://localhost:' + PORT + '/health');
+    console.log(' Collaborative Canvas ready for connections!');
 });
 
-// Export for testing
-module.exports = { app, server, wss, roomManager, drawingState };
